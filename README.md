@@ -5,7 +5,7 @@ Open source (FreeBSD) atmospheric scattering for Unity 5. Features precomputed p
 
 **_Important:_** This is a hobby project without any official support. I don't intent to use it in any real world application. Use it at your own risk.
 
-Corresponding Unity forum thread can be found [here]().
+Corresponding Unity forum thread can be found [here](http://forum.unity3d.com/threads/open-source-atmospheric-scattering.419195/).
 
 See the demo scenes on Youtube [here](https://youtu.be/yCKhQFHybLc) and [here](https://youtu.be/MC6MKYHllX0)
 
