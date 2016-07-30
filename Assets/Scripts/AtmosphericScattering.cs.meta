@@ -1,10 +1,13 @@
 fileFormatVersion: 2
 guid: 163f239264afd624fb2b0d3d1fa33f3a
-timeCreated: 1463498749
-licenseType: Pro
+timeCreated: 1469873953
+licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - ScatteringComputeShader: {fileID: 7200000, guid: df3c1b1294c79e547a1f7039d78a1b65,
+      type: 3}
+  - Sun: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
