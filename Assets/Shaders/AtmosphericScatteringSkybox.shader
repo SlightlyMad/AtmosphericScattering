@@ -43,7 +43,7 @@ Shader "Skybox/AtmosphericScattering"
 			#pragma vertex vert
 			#pragma fragment frag
 
-			#pragma shader_model 5.0
+			#pragma target 5.0
 			
 			#include "UnityCG.cginc"
 			#include "AtmosphericScattering.cginc"
