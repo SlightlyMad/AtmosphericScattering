@@ -627,12 +627,16 @@ public class AtmosphericScattering : MonoBehaviour
     /// </summary>
     private void UpdateAmbientLightColor(Color c)
     {
+#if UNITY_5_4_OR_NEWER
+        RenderSettings.ambientLight = c * AmbientColorIntensity;
+#else
         Vector3 color = new Vector3(c.r, c.g, c.b);
         float length = color.magnitude;
         color /= length;
 
         RenderSettings.ambientLight = new Color(color.x, color.y, color.z, 1);
         RenderSettings.ambientIntensity = Mathf.Max(length, 0.01f) * AmbientColorIntensity;
+#endif
     }
 
     /// <summary>
@@ -676,10 +680,14 @@ public class AtmosphericScattering : MonoBehaviour
     /// </summary>
     private void UpdateLightShaftsParameters()
     {
+#if UNITY_5_4_OR_NEWER
+        _lightShaftMaterial.SetVectorArray("_FrustumCorners", _FrustumCorners);
+#else
         _lightShaftMaterial.SetVector("_FrustumCorners0", _FrustumCorners[0]);
         _lightShaftMaterial.SetVector("_FrustumCorners1", _FrustumCorners[1]);
         _lightShaftMaterial.SetVector("_FrustumCorners2", _FrustumCorners[2]);
         _lightShaftMaterial.SetVector("_FrustumCorners3", _FrustumCorners[3]);
+#endif
 
         _lightShaftMaterial.SetInt("_SampleCount", SampleCount);
         _lightShaftMaterial.SetTexture("_DitherTexture", _ditheringTexture);
@@ -694,11 +702,15 @@ public class AtmosphericScattering : MonoBehaviour
     private void UpdateLightScatteringParameters()
     {
         UpdateMaterialParameters(_material);
-        
+
+#if UNITY_5_4_OR_NEWER
+        _material.SetVectorArray("_FrustumCorners", _FrustumCorners);
+#else
         _material.SetVector("_FrustumCorners0", _FrustumCorners[0]);
         _material.SetVector("_FrustumCorners1", _FrustumCorners[1]);
         _material.SetVector("_FrustumCorners2", _FrustumCorners[2]);
         _material.SetVector("_FrustumCorners3", _FrustumCorners[3]);
+#endif
 
         _material.SetFloat("_SunIntensity", SunIntensity);
 
