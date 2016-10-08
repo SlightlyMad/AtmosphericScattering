@@ -140,7 +140,7 @@ Shader "Skybox/AtmosphericScattering"
 				lightInscatter += RenderSun(m, dot(rayDir, -lightDir.xyz)) * _SunIntensity;
 #endif
 
-				return float4(lightInscatter, 1);
+				return float4(max(0, lightInscatter), 1);
 #endif
 			}
 			ENDCG
