@@ -351,15 +351,16 @@ Shader "Hidden/AtmosphericScattering/LightShafts"
 		//-----------------------------------------------------------------------------------------
 		inline float4 GetCascadeShadowCoord(float4 wpos, fixed4 cascadeWeights)
 		{
-//#if SHADER_TARGET > 30
-//			return mul(unity_World2Shadow[(int)dot(cascadeWeights, float4(1, 1, 1, 1))], wpos);
-//#else
 			float3 sc0 = mul(unity_World2Shadow[0], wpos).xyz;
 			float3 sc1 = mul(unity_World2Shadow[1], wpos).xyz;
 			float3 sc2 = mul(unity_World2Shadow[2], wpos).xyz;
 			float3 sc3 = mul(unity_World2Shadow[3], wpos).xyz;
-			return float4(sc0 * cascadeWeights[0] + sc1 * cascadeWeights[1] + sc2 * cascadeWeights[2] + sc3 * cascadeWeights[3], 1);
-//#endif
+			float4 shadowMapCoordinate = float4(sc0 * cascadeWeights[0] + sc1 * cascadeWeights[1] + sc2 * cascadeWeights[2] + sc3 * cascadeWeights[3], 1);
+#if defined(UNITY_REVERSED_Z)
+			float  noCascadeWeights = 1 - dot(cascadeWeights, float4(1, 1, 1, 1));
+			shadowMapCoordinate.z += noCascadeWeights;
+#endif
+			return shadowMapCoordinate;
 		}
 
 		UNITY_DECLARE_SHADOWMAP(_CascadeShadowMapTexture);
@@ -617,6 +618,8 @@ Shader "Hidden/AtmosphericScattering/LightShafts"
 			#define DIRECTIONAL
 			#define SHADOWS_DEPTH
 			#define SHADOWS_NATIVE
+
+			#include "HLSLSupport.cginc"
 
 			struct VSInput
 			{
