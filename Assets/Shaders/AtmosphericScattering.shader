@@ -257,7 +257,7 @@ Shader "Hidden/AtmosphericScattering"
 #ifdef UNITY_UV_STARTS_AT_TOP
 				uv.y = 1.0 - uv.y;
 #endif
-				float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, uv);
+				float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv.xy);
 				float linearDepth = Linear01Depth(depth);
 
 				float3 wpos = i.wpos;
