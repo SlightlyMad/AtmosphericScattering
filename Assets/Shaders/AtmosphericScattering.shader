@@ -254,6 +254,9 @@ Shader "Hidden/AtmosphericScattering"
 			float4 fragDir(v2f i) : COLOR0
 			{
 				float2 uv = i.uv.xy;
+#ifdef UNITY_UV_STARTS_AT_TOP
+				uv.y = 1.0 - uv.y;
+#endif
 				float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, uv);
 				float linearDepth = Linear01Depth(depth);
 
