@@ -33,6 +33,10 @@ using UnityEngine.Rendering;
 using System;
 using System.Text;
 
+#if UNITY_5_4_OR_NEWER
+[ImageEffectAllowedInSceneView]
+#endif
+[ExecuteInEditMode]
 [RequireComponent(typeof(Camera))]
 public class AtmosphericScattering : MonoBehaviour
 {
@@ -74,16 +78,16 @@ public class AtmosphericScattering : MonoBehaviour
     [ColorUsage(false, true, 0, 10, 0, 10)]
     private Color[] _ambientLightLUT;
 
-    private Material _material;
-    private Material _lightShaftMaterial;
+    private static Material _material;
+    private static Material _lightShaftMaterial;
     private Camera _camera;
 
     private Color _sunColor;
 
     private Texture2D _ditheringTexture;
 
-    private CommandBuffer _lightShaftsCommandBuffer;
-    private CommandBuffer _cascadeShadowCommandBuffer;
+    private static CommandBuffer _lightShaftsCommandBuffer;
+    private static CommandBuffer _cascadeShadowCommandBuffer;
 
     private ReflectionProbe _reflectionProbe;
 
@@ -143,21 +147,32 @@ public class AtmosphericScattering : MonoBehaviour
     /// </summary>
     void Start()
     {
-        Shader shader = Shader.Find("Hidden/AtmosphericScattering");
-        if (shader == null)
-            throw new Exception("Critical Error: \"Hidden/AtmosphericScattering\" shader is missing. Make sure it is included in \"Always Included Shaders\" in ProjectSettings/Graphics.");
-        _material = new Material(shader);
+        Initialize();
+    }
 
-        shader = Shader.Find("Hidden/AtmosphericScattering/LightShafts");
-        if (shader == null)
-            throw new Exception("Critical Error: \"Hidden/AtmosphericScattering/LightShafts\" shader is missing. Make sure it is included in \"Always Included Shaders\" in ProjectSettings/Graphics.");
-        _lightShaftMaterial = new Material(shader);
-        
+    private void Initialize()
+    {
+        if (_material == null)
+        {
+            Shader shader = Shader.Find("Hidden/AtmosphericScattering");
+            if (shader == null)
+                throw new Exception("Critical Error: \"Hidden/AtmosphericScattering\" shader is missing. Make sure it is included in \"Always Included Shaders\" in ProjectSettings/Graphics.");
+            _material = new Material(shader);
+        }
+
+        if (_lightShaftMaterial == null)
+        {
+            Shader shader = Shader.Find("Hidden/AtmosphericScattering/LightShafts");
+            if (shader == null)
+                throw new Exception("Critical Error: \"Hidden/AtmosphericScattering/LightShafts\" shader is missing. Make sure it is included in \"Always Included Shaders\" in ProjectSettings/Graphics.");
+            _lightShaftMaterial = new Material(shader);
+        }
+
         _camera = GetComponent<Camera>();
 
         UpdateMaterialParameters(_material);
 
-        //if (_particleDensityLUT == null)
+        if (_particleDensityLUT == null)
         {
             InitialzieRandomVectorsLUT();
             PrecomputeParticleDensity();
@@ -183,7 +198,9 @@ public class AtmosphericScattering : MonoBehaviour
     /// </summary>
     public bool IsInitialized()
     {
-        return _material == null ? false : true;
+        if (_material == null || _lightShaftMaterial == null || _camera == null || _inscatteringLUT == null || _particleDensityLUT == null)
+            return false;
+        return true;
     }
 
     /// <summary>
@@ -270,6 +287,9 @@ public class AtmosphericScattering : MonoBehaviour
         if (_reflectionProbe != null)
             return;
 
+        if (transform.Find("ReflectionProbe") != null)
+            return;
+
         GameObject go = new GameObject("ReflectionProbe");
         go.transform.parent = _camera.transform;
         go.transform.position = new Vector3(0, 0, 0);
@@ -352,19 +372,25 @@ public class AtmosphericScattering : MonoBehaviour
     /// </summary>
     private void InitializeInscatteringLUT()
     {
-        _inscatteringLUT = new RenderTexture((int)_inscatteringLUTSize.x, (int)_inscatteringLUTSize.y, 0, RenderTextureFormat.ARGBHalf, RenderTextureReadWrite.Linear);
-        _inscatteringLUT.volumeDepth = (int)_inscatteringLUTSize.z;
-        _inscatteringLUT.isVolume = true;
-        _inscatteringLUT.enableRandomWrite = true;
-        _inscatteringLUT.name = "InscatteringLUT";
-        _inscatteringLUT.Create();
+        if (_inscatteringLUT == null)
+        {
+            _inscatteringLUT = new RenderTexture((int)_inscatteringLUTSize.x, (int)_inscatteringLUTSize.y, 0, RenderTextureFormat.ARGBHalf, RenderTextureReadWrite.Linear);
+            _inscatteringLUT.volumeDepth = (int)_inscatteringLUTSize.z;
+            _inscatteringLUT.isVolume = true;
+            _inscatteringLUT.enableRandomWrite = true;
+            _inscatteringLUT.name = "InscatteringLUT";
+            _inscatteringLUT.Create();
+        }
 
-        _extinctionLUT = new RenderTexture((int)_inscatteringLUTSize.x, (int)_inscatteringLUTSize.y, 0, RenderTextureFormat.ARGBHalf, RenderTextureReadWrite.Linear);
-        _extinctionLUT.volumeDepth = (int)_inscatteringLUTSize.z;
-        _extinctionLUT.isVolume = true;
-        _extinctionLUT.enableRandomWrite = true;
-        _extinctionLUT.name = "ExtinctionLUT";
-        _extinctionLUT.Create();
+        if (_extinctionLUT == null)
+        {
+            _extinctionLUT = new RenderTexture((int)_inscatteringLUTSize.x, (int)_inscatteringLUTSize.y, 0, RenderTextureFormat.ARGBHalf, RenderTextureReadWrite.Linear);
+            _extinctionLUT.volumeDepth = (int)_inscatteringLUTSize.z;
+            _extinctionLUT.isVolume = true;
+            _extinctionLUT.enableRandomWrite = true;
+            _extinctionLUT.name = "ExtinctionLUT";
+            _extinctionLUT.Create();
+        }
     }
 
     /// <summary>
@@ -456,8 +482,16 @@ public class AtmosphericScattering : MonoBehaviour
     /// </summary>
     public void OnDestroy()
     {
-        Destroy(_material);
-        Destroy(_lightShaftMaterial);
+        if (Application.isPlaying)
+        {
+            Destroy(_material);
+            Destroy(_lightShaftMaterial);
+        }
+        else
+        {
+            DestroyImmediate(_material);
+            DestroyImmediate(_lightShaftMaterial);
+        }
     }
 
     /// <summary>
@@ -712,6 +746,7 @@ public class AtmosphericScattering : MonoBehaviour
         _material.SetVector("_FrustumCorners3", _FrustumCorners[3]);
 #endif
 
+        _material.SetVector("_CameraPos", _camera.transform.position);
         _material.SetFloat("_SunIntensity", SunIntensity);
 
         _material.SetTexture("_InscatteringLUT", _inscatteringLUT);
@@ -721,7 +756,7 @@ public class AtmosphericScattering : MonoBehaviour
             _material.EnableKeyword("ATMOSPHERE_REFERENCE");
         else
             _material.DisableKeyword("ATMOSPHERE_REFERENCE");
-
+        
         if (RenderLightShafts)
             _material.EnableKeyword("LIGHT_SHAFTS");
         else
@@ -733,6 +768,12 @@ public class AtmosphericScattering : MonoBehaviour
     /// </summary>
     public void OnPreRender()
     {
+        if (!IsInitialized())
+            Initialize();
+
+        // scene view camera can have ridiculously high far plane (several millions), it breaks the effect, clamp it
+        if (_camera.farClipPlane > 100000)
+            _camera.farClipPlane = 100000;
         // get four corners of camera frustom in world space
         // bottom left
         _FrustumCorners[0] = _camera.ViewportToWorldPoint(new Vector3(0, 0, _camera.farClipPlane));        
@@ -742,7 +783,7 @@ public class AtmosphericScattering : MonoBehaviour
         _FrustumCorners[2] = _camera.ViewportToWorldPoint(new Vector3(1, 1, _camera.farClipPlane));
         // bottom right
         _FrustumCorners[3] = _camera.ViewportToWorldPoint(new Vector3(1, 0, _camera.farClipPlane));
-
+        
         // update parameters
         UpdateSkyBoxParameters();
         UpdateLightScatteringParameters();
