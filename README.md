@@ -1,7 +1,7 @@
 # Atmospheric Scattering for Unity 5
-[![IMAGE ALT TEXT HERE](https://0rvyea-dm2305.files.1drv.com/y3mUj3cTFGBT8_5qaqKL83ApLubUWp-oLOWq56s7KCDuGuQb9LO9vP6F88XjKPlBt8JIV_vQmMlkT9lMzn8vOoXwTMuVyL8bpoIx3ajVu-jCR8rmLMSzFcnraINNH1mm7URUxsRzqECpkjK0YStARBudQ?width=1403&height=639&cropmode=none)](https://youtu.be/MC6MKYHllX0)
+[![IMAGE ALT TEXT HERE](https://0rvyea-dm2305.files.1drv.com/y4m8IYQKFvibqLRG_QUmIgqF8TsZgx9PnWa92JunBI9titjls-SYeD5rEgps7XoylMsjBc_xbYYJFwUDG2it4vtpK3THTFqBM3xZjgSuIR9WW28X6ZXlj1lu1CmcyfoncgLFD1PjrZ8SI7FDi8qODxiwi-3kyjPh5mcnrEz8t0rSSx1xNMvX2ddeLcypSp7W2gCdsUGC5BQB6blmuT4wJ1-Vg?width=1403&height=639&cropmode=none)](https://youtu.be/MC6MKYHllX0)
 
-Open source (FreeBSD) atmospheric scattering for Unity 5. Features precomputed physically based atmospheric scattering (single scattering at the moment). It can render skybox, atmospheric fog, light shafts and global reflection probe (only skybox is reflected). It can also control directional and ambient light color/intensity. All parts can be turned on and off at any time.
+Open source (BSD) atmospheric scattering for Unity 5. Features precomputed physically based atmospheric scattering (single scattering at the moment). It can render skybox, atmospheric fog, light shafts and global reflection probe (only skybox is reflected). It can also control directional and ambient light color/intensity. All parts can be turned on and off at any time.
 
 **_Important:_** This is a hobby project without any official support. I don't intent to use it in any real world application. Use it at your own risk.
 
@@ -100,4 +100,4 @@ But if you really like it and you want to brighten my day then you can always bu
 * [Bruneton08] [Precomputed Atmospheric Scattering](https://hal.inria.fr/inria-00288758/document)
 * [Yusov13] [Outdoor Light Scattering](https://software.intel.com/en-us/articles/outdoor-light-scattering-sample-update)
 
-[![IMAGE ALT TEXT HERE](https://bauhvg-dm2305.files.1drv.com/y3m8OSwfrspmuoi3zAr89mg3oNUx21i_WQXOj0Mh8YaUCw0UYFIuWUVTQfT4LZ1dKDZ0BQF67ViApoG6U5ipB8xmXhx5nu9XmzpvAVrRYSWNg3NjU2Q6OVV3bZwC60XHgdqCrxR6o2JvWmIwya_Vdm7Q3r-Eha3HoIM18DnlWtQ1aU?width=1920&height=2160&cropmode=none)](https://youtu.be/yCKhQFHybLc)
+[![IMAGE ALT TEXT HERE](https://bauhvg.dm2301.livefilestore.com/y4m8OSwfrspmuoi3zAr89mg3rUScFsN2RKpjPpqeQdWI9eq16RjJIUueint15a3p9O6PUn1hWktjJIR2_uhB0a8AeyNdZMw26doUp8ZN1_Xb6aVhbKXw1oZ0q_Rcpt3V2ZsHPGDUx3165V_7069b4VyRzRrPGWn4IzkuqnuOaRpO6CBaizItlBFgfocX0TTa3Xc4SIvFSxGgBsmO-stfKtfBw?width=1920&height=2160&cropmode=none)](https://youtu.be/yCKhQFHybLc)
