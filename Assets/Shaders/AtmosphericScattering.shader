@@ -1,3 +1,5 @@
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 //  Copyright(c) 2016, Michal Skalsky
 //  All rights reserved.
 //
@@ -94,7 +96,7 @@ Shader "Hidden/AtmosphericScattering"
             v2p vertQuad(input v)
             {
                 v2p o;
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv = v.texcoord.xy;
                 return o;
             }
@@ -143,7 +145,7 @@ Shader "Hidden/AtmosphericScattering"
 			v2p vertQuad(input v)
 			{
 				v2p o;
-				o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+				o.pos = UnityObjectToClipPos(v.vertex);
 				o.uv = v.texcoord.xy;
 				return o;
 			}
@@ -189,7 +191,7 @@ Shader "Hidden/AtmosphericScattering"
 			v2p vertQuad(input v)
 			{
 				v2p o;
-				o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+				o.pos = UnityObjectToClipPos(v.vertex);
 				o.uv = v.texcoord.xy;
 				return o;
 			}
@@ -244,7 +246,7 @@ Shader "Hidden/AtmosphericScattering"
 			{
 				PSInput o;
 
-				o.pos = mul(UNITY_MATRIX_MVP, i.vertex);
+				o.pos = UnityObjectToClipPos(i.vertex);
 				o.uv = i.uv;
 				o.wpos = _FrustumCorners[i.vertexId];
 

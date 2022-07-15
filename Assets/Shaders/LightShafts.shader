@@ -1,3 +1,6 @@
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+// Upgrade NOTE: replaced 'unity_World2Shadow' with 'unity_WorldToShadow'
+
 //  Copyright(c) 2016, Michal Skalsky
 //  All rights reserved.
 //
@@ -116,7 +119,7 @@ Shader "Hidden/AtmosphericScattering/LightShafts"
 		v2f vert(appdata v)
 		{
 			v2f o;
-			o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
+			o.vertex = UnityObjectToClipPos(v.vertex);
 			o.uv = v.uv;
 			return o;
 		}
@@ -127,7 +130,7 @@ Shader "Hidden/AtmosphericScattering/LightShafts"
 		v2fDownsample vertDownsampleDepth(appdata v, float2 texelSize)
 		{
 			v2fDownsample o;
-			o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
+			o.vertex = UnityObjectToClipPos(v.vertex);
 			//o.uv = v.uv;
 
             o.uv00 = v.uv - 0.5 * texelSize.xy;
@@ -143,7 +146,7 @@ Shader "Hidden/AtmosphericScattering/LightShafts"
         v2fUpsample vertUpsample(appdata v, float2 texelSize)
         {
             v2fUpsample o;
-            o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
+            o.vertex = UnityObjectToClipPos(v.vertex);
             o.uv = v.uv;
 
             o.uv00 = v.uv - 0.5 * texelSize.xy;
@@ -351,10 +354,10 @@ Shader "Hidden/AtmosphericScattering/LightShafts"
 		//-----------------------------------------------------------------------------------------
 		inline float4 GetCascadeShadowCoord(float4 wpos, fixed4 cascadeWeights)
 		{
-			float3 sc0 = mul(unity_World2Shadow[0], wpos).xyz;
-			float3 sc1 = mul(unity_World2Shadow[1], wpos).xyz;
-			float3 sc2 = mul(unity_World2Shadow[2], wpos).xyz;
-			float3 sc3 = mul(unity_World2Shadow[3], wpos).xyz;
+			float3 sc0 = mul(unity_WorldToShadow[0], wpos).xyz;
+			float3 sc1 = mul(unity_WorldToShadow[1], wpos).xyz;
+			float3 sc2 = mul(unity_WorldToShadow[2], wpos).xyz;
+			float3 sc3 = mul(unity_WorldToShadow[3], wpos).xyz;
 			float4 shadowMapCoordinate = float4(sc0 * cascadeWeights[0] + sc1 * cascadeWeights[1] + sc2 * cascadeWeights[2] + sc3 * cascadeWeights[3], 1);
 #if defined(UNITY_REVERSED_Z)
 			float  noCascadeWeights = 1 - dot(cascadeWeights, float4(1, 1, 1, 1));
@@ -639,7 +642,7 @@ Shader "Hidden/AtmosphericScattering/LightShafts"
 			{
 				PSInput o;
 
-				o.pos = mul(UNITY_MATRIX_MVP, i.vertex);
+				o.pos = UnityObjectToClipPos(i.vertex);
 				o.uv = i.uv;
 				o.wpos = _FrustumCorners[i.vertexId];
 

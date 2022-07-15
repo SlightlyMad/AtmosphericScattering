@@ -3,3 +3,4 @@ Library
 Temp
 *.suo
 *.csproj
+Logs/
